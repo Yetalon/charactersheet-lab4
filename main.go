@@ -5,7 +5,7 @@ import "fmt"
 type Character struct {
 	characterName string
 	class         string
-	//abilites      []int
+	abilites      map[string]int
 	proficiencies []string
 	Weapons       []string
 	alignment     string
@@ -16,9 +16,13 @@ func main() {
 	class := getclass()
 	weapons := getWeapons(class.className)
 	charateristics := getCharacteristics()
+	abilites, err := getAbilitiesScores()
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println("Please type your characters name")
 	var characterName string
 	fmt.Scanln(&characterName)
-	mychar := Character{characterName, class.className, class.proficencychoices, weapons, charateristics.alignment, charateristics.race}
+	mychar := Character{characterName, class.className, abilites, class.proficencychoices, weapons, charateristics.alignment, charateristics.race}
 	fmt.Println(mychar)
 }

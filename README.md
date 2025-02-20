@@ -4,5 +4,5 @@
 ## Issues
 - [x] learning how to use structs to access json information
 - [x] learning go api handling
-- [] error handling
-- [] 
+- [ ] debuging obscure errors
+- [ ] error handling

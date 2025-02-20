@@ -12,6 +12,14 @@ type ClassInfo struct {
 	StartingEquipmentChoices []StartingEquimentOptions `json:"starting_equipment_options"`
 }
 
+type GenericApiResults struct {
+	GenericBody []GenericName `json:"results"`
+}
+
+type GenericName struct {
+	Name string `json:"name"`
+}
+
 func getBody(endpoint string) (*http.Response, error) {
 	const url = "https://www.dnd5eapi.co/api"
 	urlToCall := fmt.Sprintf("%s/%s", url, endpoint)
@@ -62,6 +70,57 @@ func getclassinfo(chosenclass string) (ClassInfo, error) {
 		return ClassInfo{}, err
 	}
 	var response ClassInfo
+	json.Unmarshal(body, &response)
+	return response, nil
+}
+
+func getraces() (GenericApiResults, error) {
+	resp, err := getBody("races")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return GenericApiResults{}, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return GenericApiResults{}, err
+	}
+	var response GenericApiResults
+	json.Unmarshal(body, &response)
+	return response, nil
+}
+
+func getAlignments() (GenericApiResults, error) {
+	resp, err := getBody("alignments")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return GenericApiResults{}, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error", err)
+		return GenericApiResults{}, err
+	}
+	var response GenericApiResults
+	json.Unmarshal(body, &response)
+	return response, nil
+}
+
+func getAbilities() (GenericApiResults, error) {
+	resp, err := getBody("ability-scores")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return GenericApiResults{}, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return GenericApiResults{}, err
+	}
+	var response GenericApiResults
 	json.Unmarshal(body, &response)
 	return response, nil
 }

@@ -22,10 +22,9 @@ type EquipmentMisc struct {
 }
 
 type EquipmentOptions struct {
-	OptionType string         `json:"option_type"`
-	Of         *EquipmentBase `json:"of,omitempty"`
-	Choice     *EquipmentMisc `json:"choice,omitempty"`
-	Items      []struct {
+	Of     *EquipmentBase `json:"of,omitempty"`
+	Choice *EquipmentMisc `json:"choice,omitempty"`
+	Items  []struct {
 		Count int           `json:"count"`
 		Of    EquipmentBase `json:"of"`
 	} `json:"items,omitempty"`

@@ -27,11 +27,14 @@ type ProficiencyChoice struct {
 	From ProficiencyFrom `json:"from"`
 }
 
-func getclass() userclass {
+func getclass() (userclass, error) {
 	class := chooseclass()
+	if class == "" {
+		return userclass{}, fmt.Errorf("invalid input ending program")
+	}
 	profs := chooseProfs(strings.TrimSpace(class))
 	usersClassInfo := userclass{class, profs}
-	return usersClassInfo
+	return usersClassInfo, nil
 }
 
 func checkClassinput(choice string) (string, error) {

@@ -22,8 +22,12 @@ type EquipmentMisc struct {
 }
 
 type EquipmentOptions struct {
-	Of     EquipmentBase `json:"of"`
-	Choice EquipmentMisc `json:"choice"`
+	Of     *EquipmentBase `json:"of,omitempty"`
+	Choice *EquipmentMisc `json:"choice,omitempty"`
+	Items  []struct {
+		Count int           `json:"count"`
+		Of    EquipmentBase `json:"of"`
+	} `json:"items,omitempty"`
 }
 
 type EquipmentFrom struct {
@@ -51,14 +55,22 @@ func checkChosenWeapon(input string, weapons []string) (string, error) {
 
 func getweaponchoice(list []EquipmentOptions) []string {
 	listToReturn := []string{}
-	for i, value := range list {
-		if value.Of.Name != "" {
+	for _, value := range list {
+		if value.Of != nil && value.Of.Name != "" {
 			listToReturn = append(listToReturn, value.Of.Name)
-			fmt.Printf("%d) %s\n", i+1, value.Of.Name)
+			fmt.Printf("%d) %s\n", len(listToReturn), value.Of.Name)
 		}
-		if value.Choice.From.EquipmentCat.Name != "" {
+		if value.Choice != nil && value.Choice.From.EquipmentCat.Name != "" {
 			listToReturn = append(listToReturn, value.Choice.From.EquipmentCat.Name)
-			fmt.Printf("%d) %s\n", i+1, value.Choice.From.EquipmentCat.Name)
+			fmt.Printf("%d) %s\n", len(listToReturn), value.Choice.From.EquipmentCat.Name)
+		}
+		if len(value.Items) > 0 {
+			for _, item := range value.Items {
+				if item.Of.Name != "" {
+					listToReturn = append(listToReturn, item.Of.Name)
+					fmt.Printf("%d) %s\n", len(listToReturn), item.Of.Name)
+				}
+			}
 		}
 	}
 	return listToReturn

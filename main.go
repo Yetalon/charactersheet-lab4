@@ -13,7 +13,11 @@ type Character struct {
 }
 
 func main() {
-	class := getclass()
+	class, err := getclass()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	weapons := getWeapons(class.className)
 	charateristics := getCharacteristics()
 	abilites, err := getAbilitiesScores()

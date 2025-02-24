@@ -6,3 +6,4 @@
 - [x] learning go api handling
 - [ ] debuging obscure errors
 - [ ] error handling
+- [ ] 

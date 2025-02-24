@@ -22,6 +22,9 @@ func checkChosenInput(input string, weapons []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if num > len(weapons) {
+		return "", fmt.Errorf("invalid input")
+	}
 	choice := weapons[num-1]
 	return choice, nil
 }

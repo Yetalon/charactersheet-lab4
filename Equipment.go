@@ -22,9 +22,10 @@ type EquipmentMisc struct {
 }
 
 type EquipmentOptions struct {
-	Of     *EquipmentBase `json:"of,omitempty"`
-	Choice *EquipmentMisc `json:"choice,omitempty"`
-	Items  []struct {
+	OptionType string         `json:"option_type"`
+	Of         *EquipmentBase `json:"of,omitempty"`
+	Choice     *EquipmentMisc `json:"choice,omitempty"`
+	Items      []struct {
 		Count int           `json:"count"`
 		Of    EquipmentBase `json:"of"`
 	} `json:"items,omitempty"`
@@ -40,11 +41,11 @@ type StartingEquimentOptions struct {
 }
 
 func getWeapons(class string) []string {
-	weapons := chooseStartingWeapons(class)
+	weapons := chooseStartingEquipment(class)
 	return weapons
 }
 
-func checkChosenWeapon(input string, weapons []string) (string, error) {
+func checkChosenEquipment(input string, weapons []string) (string, error) {
 	num, err := strconv.Atoi(strings.TrimSpace(input))
 	if err != nil {
 		return "", err
@@ -53,7 +54,7 @@ func checkChosenWeapon(input string, weapons []string) (string, error) {
 	return choice, nil
 }
 
-func getweaponchoice(list []EquipmentOptions) []string {
+func getEquipmentChoice(list []EquipmentOptions) []string {
 	listToReturn := []string{}
 	for _, value := range list {
 		if value.Of != nil && value.Of.Name != "" {
@@ -65,18 +66,23 @@ func getweaponchoice(list []EquipmentOptions) []string {
 			fmt.Printf("%d) %s\n", len(listToReturn), value.Choice.From.EquipmentCat.Name)
 		}
 		if len(value.Items) > 0 {
+			var groupedItems []string
 			for _, item := range value.Items {
 				if item.Of.Name != "" {
-					listToReturn = append(listToReturn, item.Of.Name)
-					fmt.Printf("%d) %s\n", len(listToReturn), item.Of.Name)
+					groupedItems = append(groupedItems, item.Of.Name)
 				}
+			}
+			if len(groupedItems) > 0 {
+				groupedChoice := strings.Join(groupedItems, " and ")
+				listToReturn = append(listToReturn, groupedChoice)
+				fmt.Printf("%d) %s\n", len(listToReturn), groupedChoice)
 			}
 		}
 	}
 	return listToReturn
 }
 
-func chooseStartingWeapons(class string) []string {
+func chooseStartingEquipment(class string) []string {
 	info, err := getclassinfo(class)
 	if err != nil {
 		fmt.Println("Error", err)
@@ -84,32 +90,23 @@ func chooseStartingWeapons(class string) []string {
 	}
 
 	EquipmentChoices := info.StartingEquipmentChoices
-	firstWeaponChoice := EquipmentChoices[0].From.Options
-	secondWeaponChoice := EquipmentChoices[1].From.Options
+	equipment := []string{}
 
-	fmt.Println("Please choose a primary equipment")
-	firstChoice := getweaponchoice(firstWeaponChoice)
+	for i := range EquipmentChoices {
+		fmt.Printf("Please choose your %d equipment\n", i+1)
+		list := EquipmentChoices[i].From.Options
+		choices := getEquipmentChoice(list)
 
-	var userfirstchoice string
-	fmt.Scanln(&userfirstchoice)
+		var userChoice string
+		fmt.Scanln(&userChoice)
 
-	primaryWeapon, err := checkChosenWeapon(userfirstchoice, firstChoice)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return []string{}
+		weapon, err := checkChosenEquipment(userChoice, choices)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return []string{}
+		}
+		equipment = append(equipment, weapon)
 	}
 
-	fmt.Println("Please choose a seconday equipment")
-	secondChoice := getweaponchoice(secondWeaponChoice)
-
-	var usersecondchoice string
-	fmt.Scanln(&usersecondchoice)
-
-	secondaryWeapon, err := checkChosenWeapon(usersecondchoice, secondChoice)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		return []string{}
-	}
-
-	return []string{primaryWeapon, secondaryWeapon}
+	return equipment
 }

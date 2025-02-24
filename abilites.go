@@ -38,7 +38,7 @@ func chooseAbilities() (map[string]int, error) {
 func RollStats(abilities []GenericName) map[string]int {
 	allAbilites := make(map[string]int)
 	for _, item := range abilities {
-		rnd := 1 + rand.Intn(21)
+		rnd := 3 + rand.Intn(14)
 		allAbilites[item.Name] = rnd
 		fmt.Printf("%s: %d\n", item.Name, rnd)
 	}

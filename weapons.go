@@ -22,9 +22,10 @@ type EquipmentMisc struct {
 }
 
 type EquipmentOptions struct {
-	Of     *EquipmentBase `json:"of,omitempty"`
-	Choice *EquipmentMisc `json:"choice,omitempty"`
-	Items  []struct {
+	OptionType string         `json:"option_type"`
+	Of         *EquipmentBase `json:"of,omitempty"`
+	Choice     *EquipmentMisc `json:"choice,omitempty"`
+	Items      []struct {
 		Count int           `json:"count"`
 		Of    EquipmentBase `json:"of"`
 	} `json:"items,omitempty"`
@@ -65,11 +66,16 @@ func getweaponchoice(list []EquipmentOptions) []string {
 			fmt.Printf("%d) %s\n", len(listToReturn), value.Choice.From.EquipmentCat.Name)
 		}
 		if len(value.Items) > 0 {
+			var groupedItems []string
 			for _, item := range value.Items {
 				if item.Of.Name != "" {
-					listToReturn = append(listToReturn, item.Of.Name)
-					fmt.Printf("%d) %s\n", len(listToReturn), item.Of.Name)
+					groupedItems = append(groupedItems, item.Of.Name)
 				}
+			}
+			if len(groupedItems) > 0 {
+				groupedChoice := strings.Join(groupedItems, " and ")
+				listToReturn = append(listToReturn, groupedChoice)
+				fmt.Printf("%d) %s\n", len(listToReturn), groupedChoice)
 			}
 		}
 	}

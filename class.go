@@ -88,6 +88,9 @@ func checkProfsInput(input string, allprofs []string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
+	if len(parts) < 2 {
+		return "", "", fmt.Errorf("invalid input")
+	}
 	num2, err := strconv.Atoi(strings.TrimSpace(parts[1]))
 	if err != nil {
 		return "", "", err

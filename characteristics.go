@@ -9,12 +9,14 @@ import (
 type charateristics struct {
 	race      string
 	alignment string
+	langauge  string
 }
 
 func getCharacteristics() charateristics {
 	race := chooseRace()
 	alignment := chooseAlignment()
-	return charateristics{race, alignment}
+	langauge := chooseLanguage()
+	return charateristics{race, alignment, langauge}
 }
 
 func checkChosenInput(input string, weapons []string) (string, error) {
@@ -38,9 +40,9 @@ func chooseRace() string {
 	races := info.GenericBody
 	allRaces := []string{}
 	fmt.Println("Please choose a race")
-	for i, item := range races {
+	for _, item := range races {
 		allRaces = append(allRaces, item.Name)
-		fmt.Printf("%d) %s\n", i+1, item.Name)
+		fmt.Printf("%d) %s\n", len(allRaces), item.Name)
 	}
 	var raceChosen string
 	fmt.Scanln(&raceChosen)
@@ -61,9 +63,9 @@ func chooseAlignment() string {
 	alignments := info.GenericBody
 	allAlignments := []string{}
 	fmt.Println("Please chhose a alignment")
-	for i, item := range alignments {
+	for _, item := range alignments {
 		allAlignments = append(allAlignments, item.Name)
-		fmt.Printf("%d) %s\n", i+1, item.Name)
+		fmt.Printf("%d) %s\n", len(allAlignments), item.Name)
 	}
 	var alignmentChosen string
 	fmt.Scanln(&alignmentChosen)
@@ -73,4 +75,27 @@ func chooseAlignment() string {
 		return ""
 	}
 	return userAlignment
+}
+
+func chooseLanguage() string {
+	info, err := getGenericResponse("languages")
+	if err != nil {
+		fmt.Println("Error", err)
+		return ""
+	}
+	alignments := info.GenericBody
+	allLanguages := []string{}
+	fmt.Println("Please chhose a secondary language")
+	for _, item := range alignments {
+		allLanguages = append(allLanguages, item.Name)
+		fmt.Printf("%d) %s\n", len(allLanguages), item.Name)
+	}
+	var languageChosen string
+	fmt.Scanln(&languageChosen)
+	userLanguage, err := checkChosenInput(languageChosen, allLanguages)
+	if err != nil {
+		fmt.Println("Error", err)
+		return ""
+	}
+	return userLanguage
 }

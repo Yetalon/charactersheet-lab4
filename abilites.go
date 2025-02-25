@@ -48,7 +48,7 @@ func RollStats(abilities []GenericName) map[string]int {
 func ManualStats(abilites []GenericName) map[string]int {
 	allAbilites := make(map[string]int)
 	for _, item := range abilites {
-		fmt.Printf("Please input what value you want for %s", item.Name)
+		fmt.Printf("Please input what value you want for %s: ", item.Name)
 		var value int
 		fmt.Scanln(&value)
 		allAbilites[item.Name] = value

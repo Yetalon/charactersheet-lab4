@@ -6,3 +6,5 @@
 - [x] learning go api handling
 - [x] debuging obscure errors
 - [x] error handling
+- [x] programtically handling misc weapons
+- [x] simplifying api calls to generic

@@ -30,7 +30,7 @@ func checkChosenInput(input string, weapons []string) (string, error) {
 }
 
 func chooseRace() string {
-	info, err := getraces()
+	info, err := getGenericResponse("races")
 	if err != nil {
 		fmt.Println("Error", err)
 		return ""
@@ -53,7 +53,7 @@ func chooseRace() string {
 }
 
 func chooseAlignment() string {
-	info, err := getAlignments()
+	info, err := getGenericResponse("alignments")
 	if err != nil {
 		fmt.Println("Error", err)
 		return ""

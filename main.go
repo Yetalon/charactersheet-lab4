@@ -18,7 +18,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	weapons := getWeapons(class.className)
+	weapons := getEquipment(class.className)
 	charateristics := getCharacteristics()
 	abilites, err := getAbilitiesScores()
 	if err != nil {

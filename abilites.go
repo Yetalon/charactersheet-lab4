@@ -11,7 +11,7 @@ func getAbilitiesScores() (map[string]int, error) {
 }
 
 func chooseAbilities() (map[string]int, error) {
-	resp, err := getAbilities()
+	resp, err := getGenericResponse("ability-scores")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return nil, err

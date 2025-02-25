@@ -39,9 +39,31 @@ type StartingEquimentOptions struct {
 	From EquipmentFrom `json:"from"`
 }
 
-func getWeapons(class string) []string {
+func getEquipment(class string) []string {
 	weapons := chooseStartingEquipment(class)
 	return weapons
+}
+
+func chooseMiscWeapon(endpoint string, weapontype string) (string, error) {
+	info, err := getGenericResponse(endpoint)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return "", err
+	}
+	miscWeapons := info.Equipment
+	allMiscWeapons := []string{}
+	fmt.Printf("Please choose a %s\n", weapontype)
+	for _, item := range miscWeapons {
+		allMiscWeapons = append(allMiscWeapons, item.Name)
+		fmt.Printf("%d) %s\n", len(allMiscWeapons), item.Name)
+	}
+	var miscWeapon string
+	fmt.Scanln(&miscWeapon)
+	chosen, err := checkChosenEquipment(miscWeapon, allMiscWeapons)
+	if err != nil {
+		return "", err
+	}
+	return chosen, nil
 }
 
 func checkChosenEquipment(input string, weapons []string) (string, error) {
@@ -103,6 +125,23 @@ func chooseStartingEquipment(class string) []string {
 		if err != nil {
 			fmt.Println("Error:", err)
 			return []string{}
+		}
+		switch weapon {
+		case "Martial Melee Weapons":
+			weapon, err = chooseMiscWeapon("equipment-categories/martial-melee-weapons", weapon)
+			if err != nil {
+				weapon = "Martial Melee Weapons"
+			}
+		case "Martial Weapons":
+			weapon, err = chooseMiscWeapon("equipment-categories/martial-weapons", weapon)
+			if err != nil {
+				weapon = "Martial Weapons"
+			}
+		case "Simple Weapons":
+			weapon, err = chooseMiscWeapon("equipment-categories/simple-weapons", weapon)
+			if err != nil {
+				weapon = "Simple Weapons"
+			}
 		}
 		equipment = append(equipment, weapon)
 	}
